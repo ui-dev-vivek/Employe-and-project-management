@@ -18,3 +18,6 @@ staticfiles/
 # Ignore IDE-specific files (optional)
 .vscode/
 .idea/
+migrations
+./migrations
+./migrations/

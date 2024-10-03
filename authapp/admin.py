@@ -29,7 +29,13 @@ class MyUser(admin.ModelAdmin):
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
         ('Custom Fields', {'fields': ('is_employee', 'is_client')}),
     )
+    # add_fieldsets = (
+    #     ('NEW', {
+    #         'classes': ('wide',),
+    #         'fields': ('username', 'email', 'password1', 'password2', 'is_active','is_employee', 'is_client')}
+    #     ),
+    # )
     search_fields = ('username', 'email')
-    ordering = ('username',)
+    ordering = ('username','is_employee','is_client')
     
 admin.site.register(User,MyUser)
