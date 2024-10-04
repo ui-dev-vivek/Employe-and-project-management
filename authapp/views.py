@@ -1,8 +1,10 @@
 from django.shortcuts import render,redirect
+from django.http import HttpResponse
 from authapp.models import User
 from django.contrib.auth import authenticate, login, logout
+from decouple import config
 
-# Create your views here.
+
 def user_login(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -10,7 +12,10 @@ def user_login(request):
 
         user = authenticate(request, username=username, password=password)
 
-        # if user is not None:
+        if user is not None:
+            return HttpResponse('find User')
+        else:
+            return HttpResponse('not Found')
         #     if user.is_active:
         #         login(request, user)
         #         # Redirect to your desired page after login
@@ -41,3 +46,9 @@ def user_login(request):
     data = {"app_name": config('APP_NAME')}
     # Create a template named 'login.html'
     return render(request, "auth/login.html", data)
+
+
+
+def error_404(request):
+    return render(request, "404.html")
+
