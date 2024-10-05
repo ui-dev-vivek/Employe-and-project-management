@@ -10,9 +10,9 @@
                 <div class="card-body">
 
                     <!-- /Logo -->
-                    <h3 class="mb-2 text-center"> <img width="40" src="{% static 'images/logo.png' %}" alt="">
+                    <h3 class="mb-2 text-center"> <img width="120" src="{% static 'images/logo.png' %}" alt=""><br>
                         {{app_name}}</h3>
-                    <p class="mb-4 pt-1">Please sign-in to your account using Email & Password.</p>
+                    <!-- <p class="mb-4 pt-1">Please sign-in to your account using Email & Password.</p> -->
                     <div class="p-1">
                         {% if messages %}
                         <ul class="messages">
@@ -27,7 +27,16 @@
                         <div class="mb-3">
                             <label for="email" class="form-label">Email or Username</label>
                             <input type="text" class="form-control" id="email" name="username"
+                                value="{{form.username.value|default_if_none:''}}"
                                 placeholder="Enter your email or username" autofocus />
+                            {% if form.username.errors %}
+                            <ul class="error-list" style="color: red;">
+                                {% for error in form.username.errors %}
+                                <li><small>{{ error }}</small>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
                         </div>
                         <div class="mb-3 form-password-toggle">
                             <div class="d-flex justify-content-between">
@@ -41,6 +50,13 @@
                                     placeholder="Password" aria-describedby="password" />
                                 <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                             </div>
+                            {% if form.password.errors %}
+                            <ul class="error-list" style="color: red;">
+                                {% for error in form.password.errors %}
+                                <li><small>{{ error }}</small></li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
                         </div>
                         <div class="mb-3">
                             <div class="form-check">

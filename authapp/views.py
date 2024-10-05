@@ -7,19 +7,21 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib import messages
 from decouple import config
-
+from .forms import *
 
 def user_login(request):
+    data={}
+    data['app_name']= config('APP_NAME')    
     if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = request.POST.get("username")
+            password = request.POST.get("password")
+        else:
+            data['form']=form
+            return render(request, 'auth/login.html', data)        
         user = authenticate(request, username=username, password=password)
-
         if user is not None:
-        #     return HttpResponse('find User')
-        # else:
-        #     return HttpResponse('not Found')
             if user.is_active:
                 login(request, user)             
                 if request.user.is_employee:
@@ -46,8 +48,8 @@ def user_login(request):
                 messages.error(request, "Your account is not active.")
         else:
             messages.error(request, "Invalid Email/Username or Password.")
-    data = {"app_name": config('APP_NAME')}
-    # Create a template named 'login.html'
+    data['form'] = LoginForm()
+  
     return render(request, "auth/login.html", data)
 
 
@@ -59,7 +61,14 @@ def user_logout(request):
 def forgot_password(request):
     data={'app_name':config('APP_NAME')}
     if request.method=='POST':
-        email=request.POST.get('email')
+        form = ForgotPasswordForm(request.POST)
+        if form.is_valid():
+            email=request.POST.get('email')
+        else:
+            data['form'] = form
+            return render(request, 'auth/forgot_password.html', data)          
+           
+        
         try:
             user=User.objects.get(email=email)
             token=default_token_generator.make_token(user)
@@ -84,7 +93,7 @@ def forgot_password(request):
             messages.success(request, "Reset link send on register email.")            
         except:
             messages.error(request, "You are not register.")
-            
+        data['form']=ForgotPasswordForm()
     return render(request,'auth/forgot_password.html',data)
 
 def reset_password(request,uidb64,token):
