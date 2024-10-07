@@ -4,10 +4,11 @@ from authapp.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes
+from django.utils.encoding import force_bytes,force_str
 from django.contrib import messages
 from decouple import config
 from .forms import *
+
 
 def user_login(request):
     data={}
@@ -70,10 +71,12 @@ def forgot_password(request):
            
         
         try:
-            user=User.objects.get(email=email)
-            token=default_token_generator.make_token(user)
+            user = User.objects.get(email=email)
+            token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            reset_link=request.build_absolute_uri('/')+ f"reset-password/{uid}/{token}/"
+            print('UID: ',uid)            
+           
+            reset_link = request.build_absolute_uri('/') + f"reset-password/{uid}/{token}/"
             print(reset_link)
             # user_name=user.first_name + user.last_name
             # Send the email using the HTML template
@@ -97,11 +100,12 @@ def forgot_password(request):
     return render(request,'auth/forgot_password.html',data)
 
 def reset_password(request,uidb64,token):
-    uid=urlsafe_base64_decode(uidb64)
+    uid = force_str(urlsafe_base64_decode(uidb64))
+    print('UID: ',uid)  
     try:
         user=User.objects.get(pk=uid)
-        if user and default_token_generator.check_token(user,token):
-            return render(request, "auth/reset_password.html")
+    #     # if user and default_token_generator.check_token(user,token):
+        return render(request, "auth/reset_password.html")
             
     except:
         messages.error(request,'Password reset link link is invalied or expired. send agen.')    
