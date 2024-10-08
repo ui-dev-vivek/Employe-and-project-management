@@ -26,7 +26,7 @@ class Subsidiaries(BaseModel):
 
 # One TO Many Relation : Subsidiary -> Budget
 
-class Budget(BaseModel):
+class Budgetx(BaseModel):
     subsidiary=models.ForeignKey(Subsidiaries, on_delete=models.CASCADE,related_name="subsidiary")
     year=models.IntegerField()
     ammount=models.FloatField()
