@@ -25,13 +25,11 @@ class BudgetAdmin(admin.ModelAdmin):
     ordering = ['subsidiary']
 
     def save_model(self, request, obj, form, change):
-        # Check if a budget for the same subsidiary and year already exists
         budget = Budget.objects.filter(subsidiary=obj.subsidiary, year=obj.year).first()
-
-        if budget and budget.pk != obj.pk:        
+        if budget and budget.pk != obj.pk:
+            messages.error(request, "A budget for this subsidiary and year already exists!")
             return HttpResponseRedirect(request.path)
         super().save_model(request, obj, form, change)
-       
 
 
 
