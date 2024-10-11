@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'authapp',
     'subsidiaries',
     'clients',
+    'employees'
 ]
 
 MIDDLEWARE = [
